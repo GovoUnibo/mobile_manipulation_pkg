@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+	<include file="$(find mobile_manipulator_pkg)/launch/gazebo.launch"/>
+	
+	<include file="$(find mobile_manipulator_pkg)/launch/mobile_manipulator.launch"/>
+	
+
+
+
+</launch>

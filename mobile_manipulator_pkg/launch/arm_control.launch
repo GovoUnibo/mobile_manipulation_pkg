@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="robot_name" default="ur5"/>
+
+    <rosparam file="$(find ur_robot_driver)/config/ur5e_controllers.yaml" command="load" subst_value="True"/>
+
+    <node   name="arm_ctrl_spwn"  pkg="controller_manager" type="spawner" respawn="false" output="screen"  
+            args="joint_group_pos_controller" 
+    />
+
+</launch>

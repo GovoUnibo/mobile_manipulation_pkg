@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<launch>
+  
+  <arg name="base_prefix" default="robot_"/>
+  <arg name="manipulator_prefix" default="ur5_"/>
+
+  <arg name="use_joint_state_publisher" default="false"/>
+
+  <arg name="gps_latitude" default="39.5080331"/>
+  <arg name="gps_longitude" default="-0.4619816"/>
+
+  <arg name="ros_planar_move_plugin" default="false"/>
+  <arg name="ros_planar_move_plugin_force_based" default="true"/>
+  <arg name="use_gpu_for_simulation" default="true"/>
+
+  <arg name="kinematics" default="skid"/>
+
+    <arg name="x_init_pose" default="1"/>
+    <arg name="y_init_pose" default="0"/>
+    <arg name="z_init_pose" default="0"/>
+
+  <param name="robot_description" command="$(find xacro)/xacro '$(find mobile_manipulator_pkg)/urdf/ur_summit.xacro'
+          base_prefix:=$(arg base_prefix)
+          manipulator_prefix:=$(arg manipulator_prefix)
+          ros_planar_move_plugin:=$(arg ros_planar_move_plugin)
+          ros_planar_move_plugin_force_based:=$(arg ros_planar_move_plugin_force_based)
+          kinematics:=$(arg kinematics)
+          gpu:=$(arg use_gpu_for_simulation)
+          gps_latitude:='$(arg gps_latitude)'
+          gps_longitude:='$(arg gps_longitude)'" />
+
+
+
+
+
+        <!-- Spawner model into gazebo -->
+        <node name="urdf_spawner_summit_model" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+                args="
+                -x $(arg x_init_pose)
+                -y $(arg y_init_pose)
+                -z $(arg z_init_pose)
+                -J $(arg manipulator_prefix)shoulder_pan_joint 0
+                -J $(arg manipulator_prefix)shoulder_lift_joint -0.707
+                -J $(arg manipulator_prefix)elbow_joint -1.77
+                -J $(arg manipulator_prefix)wrist_1_joint -2.3
+                -J $(arg manipulator_prefix)wrist_2_joint 1.57
+                -J $(arg manipulator_prefix)wrist_3_joint 0
+                -urdf
+                -unpause
+                -param robot_description
+                -model robot" />
+
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+      <remap from="/joint_states" to="joint_states" />
+  </node>
+  
+</launch>
+
+
